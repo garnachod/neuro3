@@ -1,0 +1,7 @@
+Cambios para la segunda parte:
+
+y_k = f(y_in_k) = y_in_k (Hay que usar la identidad para la capa de salida, no para la oculta)
+
+Paso 5, transparencia 10 y Paso 13 transparencia 13 => y_k = y_in_k
+
+Paso 6, transparencia 11 => Delta_k = (t_k - y_k) * 1 (porque la derivada de la identidad es uno...)
