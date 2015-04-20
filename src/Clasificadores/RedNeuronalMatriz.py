@@ -9,10 +9,10 @@ import random
 import math   # This will import math module
 import json
 
-class RedNeuronal(Clasificador):
+class RedNeuronalMatriz(Clasificador):
 	"""docstring for RedNeuronal"""
 	def __init__(self):
-		super(RedNeuronal, self).__init__()
+		super(RedNeuronalMatriz, self).__init__()
 		self.clases = []
 		self.columnas = []
 		self.nColumnas = 0
@@ -88,12 +88,12 @@ class RedNeuronal(Clasificador):
 			self.pesosCapaSalida.append([])
 			self.pesosCapaSalida[indNeurona] = map((lambda x: (random.random() - 0.5)), range(0, self.neuronasCapaOculta + 1))
 
-		self.NguyenWidrow()
+		#self.NguyenWidrow()
 
 		#generamos todos los vectores objetivos
 		vectoresObjetivos = {}
 		for instancia in data.getListInstances():
-			vectoresObjetivos[instancia] = self.generaVectorObjetivoSalida(instancia.getClase())
+			vectoresObjetivos[instancia] = self.generaVectorObjetivoSalida(instancia)
 
 		instancias = data.getListInstances()
 
@@ -127,17 +127,17 @@ class RedNeuronal(Clasificador):
 					#aplicamos la sigmoidal a la suma, esto nos da la salida de la neurona
 					if self.bipolar == False:
 						#f1 
-						if suma > 200:
+						if suma > 400:
 							salidaCapaOculta.append(1.0)
-						elif suma < -200:
+						elif suma < -400:
 							salidaCapaOculta.append(0.0)
 						else:
 							salidaCapaOculta.append(1.0/(1.0 + math.exp( - suma)))
 					else:
 						#f2
-						if suma > 200:
+						if suma > 400:
 							salidaCapaOculta.append(1.0)
-						elif suma < -200:
+						elif suma < -400:
 							salidaCapaOculta.append(-1.0)
 						else:
 							salidaCapaOculta.append((2.0/(1.0 + math.exp( - suma))) - 1.0)
@@ -151,17 +151,17 @@ class RedNeuronal(Clasificador):
 					#aplicamos la sigmoidal a la suma, esto nos da la salida de la neurona
 					if self.bipolar == False:
 						#f1
-						if suma > 200:
+						if suma > 400:
 							salidaFinal.append(1.0)
-						elif suma < -200:
+						elif suma < -400:
 							salidaFinal.append(0.0)
 						else:
 							salidaFinal.append(1.0/(1.0 + math.exp( - suma)))
 					else:
 						#f2
-						if suma > 200:
+						if suma > 400:
 							salidaFinal.append(1.0)
-						elif suma < -200:
+						elif suma < -400:
 							salidaFinal.append(-1.0)
 						else:
 							salidaFinal.append((2.0/(1.0 + math.exp( - suma))) - 1.0)
@@ -177,7 +177,7 @@ class RedNeuronal(Clasificador):
 					deltaMinusculaK = map((lambda x, y: (x - y) * (y * (1.0 - y))), vectoresObjetivos[instancia], salidaFinal)
 				else:
 					#Tk - Yk * f2`(Yin)
-					deltaMinusculaK = map((lambda x, y: (x - y) * (0.5 * ((1 + y) * (1.0 - y)))), vectoresObjetivos[instancia], salidaFinal)
+					deltaMinusculaK = map((lambda x, y: (x - y) * (0.5 * ((1.0 + y) * (1.0 - y)))), vectoresObjetivos[instancia], salidaFinal)
 				
 				deltaMayusculaJK = []
 				for indNeuronaSalida in range(0, self.nClases):
@@ -191,6 +191,7 @@ class RedNeuronal(Clasificador):
 				for indNeurona in range(0, self.nClases):
 					for indNeuronaOculta  in range(1, self.neuronasCapaOculta + 1):
 						deltaMinInj[indNeuronaOculta - 1] += self.pesosCapaSalida[indNeurona][indNeuronaOculta] * deltaMinusculaK[indNeurona]
+
 
 				deltaMinusculaJ = []
 				if self.bipolar == False:
@@ -218,6 +219,8 @@ class RedNeuronal(Clasificador):
 				#fin de bucle de instancias
 
 			cuadratico_epoca = cuadratico_epoca/float(self.nInstaces * self.nClases)
+
+
 			if self.debug == True:
 				if test is None:
 					self.debugFile.write(str(epoca) + '\t' + str(self.getErrorFromInstances(data)) + '\t')
@@ -250,17 +253,9 @@ class RedNeuronal(Clasificador):
 					self.lastError = error
 
 	#private
-	def generaVectorObjetivoSalida(self, claseIn):
-		vector = []
-		for clase in self.clases:
-			if clase == claseIn:
-				vector.append(1)
-			else:
-				if self.bipolar == False:	
-					vector.append(0)
-				else:
-					vector.append(-1)
-		return vector
+	def generaVectorObjetivoSalida(self, instancia):
+		
+		return instancia.getBipolarVectorObjetivoSalida()
 
 	def getErrorFromInstances(self, instances):
 		error = 0.0
