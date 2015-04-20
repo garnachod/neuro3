@@ -16,7 +16,7 @@ class DivisionPorcentual(Particionado):
 	def setPorcentajeTrain(self, porcentaje):
 		self.porcentaje = porcentaje
 
-	def generaParticiones(self, instances):
+	def generaParticiones(self, instances, shuffle=True):
 		#una sola particion
 		particion = Particion()
 		#generar las instacias para la particion
@@ -30,7 +30,9 @@ class DivisionPorcentual(Particionado):
 		instanceTest.setColumnas(instances.getColumnasList(), instances.getColumnasTipo())
 		#generar las instancias
 		listInstances = list(instances.getListInstances())
-		random.shuffle(listInstances)
+		
+		if shuffle:
+			random.shuffle(listInstances)
 
 		n_instances = len(listInstances)
 		n_instances_train = int(round(n_instances * self.porcentaje))
