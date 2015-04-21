@@ -7,7 +7,7 @@ def adaptaFicheroSerie(f_ori, f_fin, na, ns):
 
 	f_fin.write(str(na) + ' ' + str(ns))
 
-	for i in range(0, len(data) - na - ns + 1):
+	for i in range(0, len(data) - na - ns):
 		f_fin.write('\n')
 
 		for j in range(0, na):

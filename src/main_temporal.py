@@ -2,39 +2,30 @@
 import os, sys
 lib_path = os.path.abspath('../')
 sys.path.append(lib_path)
-from Clasificadores.RedNeuronal import RedNeuronal
+from Clasificadores.RedNeuronalTemporal import RedNeuronalTemporal
 from Particionado.DivisionPorcentual import DivisionPorcentual
 from Particionado.Particion import Particion
-from RW.LectorNeuro import LectorNeuro
+from RW.LectorNeuroContinuo import LectorNeuroContinuo
+from RW.AdaptaFicheroSerie import *
 from Instance import Instance
 from Instances import Instances
 from time import time
+from operator import add,mul
 
 
-def calculaError(clasificador, instances):
-	error = 0.0
-	erroresPorClase = {}
-	aciertosPorClase = {}
-	for clase in instances.getClases():
-		erroresPorClase[clase] = 0
-		aciertosPorClase[clase] = 0
-
+def calculaError(clasificador, instances, f_test=None):
+	cuadratico = 0.0
 	for instance in instances.getListInstances():
-		clase = instance.getClase()
+		vectorObj = instance.getVectorObjetivoSalida()
 		prediccion = clasificador.classifyInstance(instance)
+		if f_test != None:
+			f_test.write(str(prediccion[0]) + '\n')
 		#print "clase: " + str(clase) + " prediccion: " + str(prediccion)
+		cuadratico_instancia = reduce(add, map((lambda x, y: (x - y)**2), vectorObj, prediccion))
+		cuadratico += cuadratico_instancia
 
-		if prediccion != clase:
-			erroresPorClase[clase] += 1
-			error += 1.0
-		else:
-			aciertosPorClase[clase] += 1 
-
-	procentajeError = error / float(instances.getNumeroInstances())
-	print 'Error medio: ' + str(procentajeError)
-	for clase in instances.getClases():
-		sumaAux = float(erroresPorClase[clase] + aciertosPorClase[clase])
-		print '\t'+ clase + ' fallos: ' + str(erroresPorClase[clase]) + ' aciertos: ' + str(aciertosPorClase[clase]) + ' porcentaje: ' + str(erroresPorClase[clase] / sumaAux)
+	print "error cuadratico = " + str(cuadratico/instances.getNumeroInstances())
+	
 
 def returnError(clasificador, instances):
 	error = 0.0
@@ -62,36 +53,42 @@ if __name__ == '__main__':
 		print "Ejemplo de llamada: python main.py xor.txt 1 0.1 2 xor_error.txt"
 		sys.exit(-1)
 
-	lector = LectorNeuro()
-	instances = lector.leerFichero(sys.argv[1])
+	
+	f_ori = open(sys.argv[1], 'r')
+	f_fin = open("aux_temp.txt", 'w')
+	adaptaFicheroSerie(f_ori, f_fin, 5 , 1)
+	f_ori.close()
+	f_fin.close()
+	lector = LectorNeuroContinuo()
+	instances = lector.leerFichero("aux_temp.txt")
+
 	
 	porcentajeParticionado = float(sys.argv[2])
 	particionado = DivisionPorcentual()
 	particionado.setPorcentajeTrain(porcentajeParticionado)
-	particion = particionado.generaParticionesProporcional(instances)
+	particion = particionado.generaParticiones(instances, False)
 	
 	
 	print "Multilayer Perceptron"
-	clasificador = RedNeuronal()
+	clasificador = RedNeuronalTemporal()
 	clasificador.setParameters('nNeuronas=' + sys.argv[4])
 	clasificador.setParameters('alpha=' + sys.argv[3])
 	clasificador.setParameters('nEpocas=1000')
 	clasificador.setParameters('debugFile=' + sys.argv[5])
 	clasificador.setDebug(True)
 	start_time = time()
-	if porcentajeParticionado != 1.0:
-		clasificador.buildClassifier(particion.getTrain(), particion.getTest())
-	else:
-		clasificador.buildClassifier(particion.getTrain())
+	clasificador.buildClassifier(particion.getTrain())
 	elapsed_time = time() - start_time
 	print("Elapsed time: %0.10f seconds." % elapsed_time)
 
 	print "Error TRAIN:"
-	calculaError(clasificador, particion.getTrain())
+	f_deb = open("aux_temp_deb.txt", 'w')
+	calculaError(clasificador, particion.getTrain(),f_deb)
 	if porcentajeParticionado != 1.0:
 		print "Error TEST:"
-		calculaError(clasificador, particion.getTest())
+		calculaError(clasificador, particion.getTest(),f_deb)
 
+	f_deb.close()
 	#fout = open("predicciones_nnet.txt", "w")
 
 	# clasificador del nuevo

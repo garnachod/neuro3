@@ -64,13 +64,6 @@ class RedNeuronalTemporal(Clasificador):
 		self.columnas = list(data.getColumnasList())
 		self.nColumnas = len(self.columnas)
 
-		if data.getNumeroInstances() >= 100:
-			self.activo_control_fin = True
-			particionado = DivisionPorcentual()
-			particionado.setPorcentajeTrain(0.8)
-			particion = particionado.generaParticionesProporcional(data)
-			data = particion.getTrain()
-			self.conjuntoValidacion = particion.getTest()
 		
 		self.nInstaces = data.getNumeroInstances()
 		#creamos las neuronas de entrada
@@ -93,7 +86,7 @@ class RedNeuronalTemporal(Clasificador):
 		#generamos todos los vectores objetivos
 		vectoresObjetivos = {}
 		for instancia in data.getListInstances():
-			vectoresObjetivos[instancia] = self.generaVectorObjetivoSalida(instancia.getClase())
+			vectoresObjetivos[instancia] = self.generaVectorObjetivoSalida(instancia)
 
 		instancias = data.getListInstances()
 
@@ -128,17 +121,17 @@ class RedNeuronalTemporal(Clasificador):
 					if self.bipolar == False:
 						#f1 
 						if suma > 200:
-							salidaCapaOculta.append(1)
-						elif suma < -40:
-							salidaCapaOculta.append(0)
+							salidaCapaOculta.append(1.0)
+						elif suma < -200:
+							salidaCapaOculta.append(0.0)
 						else:
 							salidaCapaOculta.append(1.0/(1.0 + math.exp( - suma)))
 					else:
 						#f2
 						if suma > 200:
-							salidaCapaOculta.append(1)
+							salidaCapaOculta.append(1.0)
 						elif suma < -200:
-							salidaCapaOculta.append(-1)
+							salidaCapaOculta.append(-1.0)
 						else:
 							salidaCapaOculta.append((2.0/(1.0 + math.exp( - suma))) - 1.0)
 
@@ -174,10 +167,7 @@ class RedNeuronalTemporal(Clasificador):
 				deltaMinInj = [0 for x in range(0, self.neuronasCapaOculta)]
 				for indNeurona in range(0, self.nClases):
 					for indNeuronaOculta  in range(1, self.neuronasCapaOculta + 1):
-						deltaMinInj[indNeuronaOculta - 1] += self.pesosCapaSalida[indNeurona][indNeuronaOculta]
-
-				for indNeuronaOculta  in range(0, self.neuronasCapaOculta):
-						deltaMinInj[indNeuronaOculta] *= deltaMinusculaK[indNeurona]
+						deltaMinInj[indNeuronaOculta - 1] += self.pesosCapaSalida[indNeurona][indNeuronaOculta] * deltaMinusculaK[indNeurona]
 
 				deltaMinusculaJ = []
 				if self.bipolar == False:
@@ -235,19 +225,9 @@ class RedNeuronalTemporal(Clasificador):
 				else:
 					#print str(epoca)+ '\t' + str(error)
 					self.lastError = error
-
 	#private
-	def generaVectorObjetivoSalida(self, claseIn):
-		vector = []
-		for clase in self.clases:
-			if clase == claseIn:
-				vector.append(1)
-			else:
-				if self.bipolar == False:	
-					vector.append(0)
-				else:
-					vector.append(-1)
-		return vector
+	def generaVectorObjetivoSalida(self, instancia):
+		return instancia.getVectorObjetivoSalida()
 
 	def getErrorFromInstances(self, instances):
 		error = 0.0

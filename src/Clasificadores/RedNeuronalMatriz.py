@@ -254,7 +254,6 @@ class RedNeuronalMatriz(Clasificador):
 
 	#private
 	def generaVectorObjetivoSalida(self, instancia):
-		
 		return instancia.getBipolarVectorObjetivoSalida()
 
 	def getErrorFromInstances(self, instances):
@@ -350,15 +349,8 @@ class RedNeuronalMatriz(Clasificador):
 	"""se clasifica una sola instancia, retornando la clase, int"""
 	def classifyInstance(self, instancia):
 		salidaFinal = self.computeInstance(instancia)
-		#print salidaFinal
-		mejorClase = None
-		mejorProb = -1.0
-		for i in range(0, self.nClases):
-			if salidaFinal[i] > mejorProb:
-				mejorClase = self.clases[i]
-				mejorProb = salidaFinal[i]
 
-		return mejorClase
+		return salidaFinal
 
 
 	"""retorna un String JSON para que el Clasificador se pueda guardar en un fichero o donde sea necesario"""

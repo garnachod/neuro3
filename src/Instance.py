@@ -25,6 +25,9 @@ class Instance(object):
 		longitud = len(self.listaDatos)
 		return self.listaDatos[longitud - 1]
 
+	def getVectorObjetivoSalida(self, nclases = None):
+		raise NotImplementedError( "Should have implemented this" )
+
 	def getBipolarVectorObjetivoSalida(self, clases):
 		if self.bipVectorObjetivo == None:
 			claseIn = self.getClase()

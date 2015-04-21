@@ -1,6 +1,9 @@
 from Instance import Instance
 
 class InstanceMatriz(Instance):
+	def getVectorObjetivoSalida(self, nclases = None):
+		return sefl.getBipolarVectorObjetivoSalida(nclases)
+		
 	def getBipolarVectorObjetivoSalida(self, nclases = None):
 		if self.bipVectorObjetivo == None:
 			self.generaBipolarVectorObjetivoSalida(nclases)
