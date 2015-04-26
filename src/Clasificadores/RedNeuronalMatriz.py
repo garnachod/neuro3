@@ -110,7 +110,7 @@ class RedNeuronalMatriz(Clasificador):
 		#paso1
 		for epoca in range(0, self.nEpocas):
 			cuadratico_epoca = 0
-			print epoca
+			#print epoca
 			#paso2 por cada instancia en train
 			for instancia in instancias:
 				#***********inicio de Feedforward**********************************
