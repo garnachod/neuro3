@@ -81,7 +81,7 @@ class RedNeuronalTemporal(Clasificador):
 			self.pesosCapaSalida.append([])
 			self.pesosCapaSalida[indNeurona] = map((lambda x: (random.random() - 0.5)), range(0, self.neuronasCapaOculta + 1))
 
-		self.NguyenWidrow()
+		# self.NguyenWidrow()
 
 		#generamos todos los vectores objetivos
 		vectoresObjetivos = {}

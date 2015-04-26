@@ -1,6 +1,6 @@
 import sys
 
-# f_ori y f_fin son ficheros ya abieros
+# f_ori y f_fin son ficheros ya abiertos
 # na y ns enteros > 0
 def adaptaFicheroSerie(f_ori, f_fin, na, ns):
 	data = f_ori.read().split('\n')
