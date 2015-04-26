@@ -18,3 +18,10 @@ class InstanceMatriz(Instance):
 				self.bipVectorObjetivo.append(-1)
 			else:
 				self.bipVectorObjetivo.append(1)
+
+	def duplica(self):
+		instanceRetorno = InstanceMatriz()
+		instanceRetorno.listaDatos = list(self.listaDatos)
+		instanceRetorno.instances = self.instances
+		instanceRetorno.bipVectorObjetivo = list(self.bipVectorObjetivo)
+		return instanceRetorno

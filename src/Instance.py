@@ -40,4 +40,12 @@ class Instance(object):
 	
 		return self.bipVectorObjetivo
 
+	def duplica(self):
+		instanceRetorno = Instance()
+		instanceRetorno.listaDatos = list(self.listaDatos)
+		instanceRetorno.instances = self.instances
+		print instanceRetorno.bipVectorObjetivo
+		instanceRetorno.bipVectorObjetivo = list(self.bipVectorObjetivo)
+		print instanceRetorno.bipVectorObjetivo
+		return instanceRetorno
 		

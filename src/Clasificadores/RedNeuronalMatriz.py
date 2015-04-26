@@ -64,7 +64,7 @@ class RedNeuronalMatriz(Clasificador):
 		self.columnas = list(data.getColumnasList())
 		self.nColumnas = len(self.columnas)
 
-		if data.getNumeroInstances() >= 100:
+		if data.getNumeroInstances() >= 100000:
 			self.activo_control_fin = True
 			particionado = DivisionPorcentual()
 			particionado.setPorcentajeTrain(0.8)
@@ -110,6 +110,7 @@ class RedNeuronalMatriz(Clasificador):
 		#paso1
 		for epoca in range(0, self.nEpocas):
 			cuadratico_epoca = 0
+			print epoca
 			#paso2 por cada instancia en train
 			for instancia in instancias:
 				#***********inicio de Feedforward**********************************
@@ -219,7 +220,6 @@ class RedNeuronalMatriz(Clasificador):
 				#fin de bucle de instancias
 
 			cuadratico_epoca = cuadratico_epoca/float(self.nInstaces * self.nClases)
-
 
 			if self.debug == True:
 				if test is None:
