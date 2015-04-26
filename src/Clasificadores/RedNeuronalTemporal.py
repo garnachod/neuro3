@@ -103,6 +103,7 @@ class RedNeuronalTemporal(Clasificador):
 		#paso1
 		for epoca in range(0, self.nEpocas):
 			cuadratico_epoca = 0
+			
 			#paso2 por cada instancia en train
 			for instancia in instancias:
 				#***********inicio de Feedforward**********************************
@@ -195,6 +196,8 @@ class RedNeuronalTemporal(Clasificador):
 				#fin de bucle de instancias
 
 			cuadratico_epoca = cuadratico_epoca/float(self.nInstaces * self.nClases)
+			if epoca % 50 ==0:
+				print cuadratico_epoca
 			if self.debug == True:
 				if test is None:
 					self.debugFile.write(str(epoca) + '\t' + str(self.getErrorFromInstances(data)) + '\t')
