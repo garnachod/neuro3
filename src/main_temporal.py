@@ -79,15 +79,19 @@ def returnError(clasificador, instances):
 
 if __name__ == '__main__':
 
-	# if len(sys.argv) != 6:
-	# 	print "Error en la llamada. Se esperan los siguientes argumentos:"
-	# 	print "\t1.- Nombre del fichero con los datos del problema."
-	# 	print "\t2.- El porcentaje del conjunto de train. Expresar como un numero entre 0 y 1 utilizando el punto como divisor decimal."
-	# 	print "\t3.- La tasa de aprendizaje."
-	# 	print "\t4.- El numero de neuronas de la capa oculta."
-	# 	print "\t5.- El nombre del fichero donde debe escribirse el error cuadratico medio en cada epoca. Se borrara el fichero si ya existe."
-	# 	print "Ejemplo de llamada: python main.py xor.txt 1 0.1 2 xor_error.txt"
-	# 	sys.exit(-1)
+	if len(sys.argv) != 10:
+	 	print "Error en la llamada. Se esperan los siguientes argumentos:"
+	 	print "\t1.- Nombre del fichero con los datos del problema."
+	 	print "\t2.- Na."
+	 	print "\t3.- Ns."
+	 	print "\t4.- Nf."
+	 	print "\t5.- Lista con los puntos desde los que se debe empezar a predecir recursivamente."
+	 	print "\t6.- El porcentaje del conjunto de train. Expresar como un numero entre 0 y 1 utilizando el punto como divisor decimal."
+	 	print "\t7.- La tasa de aprendizaje."
+	 	print "\t8.- El numero de neuronas de la capa oculta."
+	 	print "\t9.- El nombre del fichero donde debe escribirse el error cuadratico medio en cada epoca. Se borrara el fichero si ya existe."
+	 	print "Ejemplo de llamada: python main_temporal.py p3_serie2.txt 5 1 50 \"0 100 200 300 400\" 0.5 0.001 40 out.txt"
+	 	sys.exit(-1)
 
 
 	f_in = sys.argv[1]

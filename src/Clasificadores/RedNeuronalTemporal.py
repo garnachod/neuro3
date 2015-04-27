@@ -196,8 +196,8 @@ class RedNeuronalTemporal(Clasificador):
 				#fin de bucle de instancias
 
 			cuadratico_epoca = cuadratico_epoca/float(self.nInstaces * self.nClases)
-			if epoca % 50 ==0:
-				print cuadratico_epoca
+			# if epoca % 50 ==0:
+			#	print cuadratico_epoca
 			if self.debug == True:
 				if test is None:
 					self.debugFile.write(str(epoca) + '\t' + str(self.getErrorFromInstances(data)) + '\t')
